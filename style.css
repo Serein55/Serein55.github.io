@@ -14,7 +14,7 @@ body {
   color: var(--ink);
   font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
   font-size: 16px;
-  line-height: 1.95;
+  line-height: 1.7;
   letter-spacing: .005em;
   text-rendering: optimizeLegibility;
 }
@@ -81,14 +81,14 @@ h1 {
   font-weight: 500;
   letter-spacing: -.005em;
   line-height: 1.15;
-  margin-bottom: 64px;
+  margin-bottom: 44px;
 }
 h1::after {
   content: "";
   display: block;
   width: 44px;
   height: 2px;
-  margin-top: 30px;
+  margin-top: 26px;
   background: var(--accent);
 }
 h2 {
@@ -98,16 +98,21 @@ h2 {
   text-transform: uppercase;
   letter-spacing: .18em;
   color: var(--muted);
-  padding-top: 52px;
-  margin: 52px 0 20px;
+  padding-top: 40px;
+  margin: 40px 0 18px;
   border-top: 1px solid var(--line);
 }
-h2:first-of-type { margin-top: 0; }
+h2:first-of-type {
+  margin: 0;
+  padding-top: 0;
+  border-top: none;
+}
 p {
   max-width: 62ch;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
   color: var(--soft);
-  font-size: 16.5px;
+  font-size: 16px;
+  line-height: 1.75;
 }
 p:last-child { margin-bottom: 0; }
 a { color: var(--accent); text-underline-offset: 3px; }
