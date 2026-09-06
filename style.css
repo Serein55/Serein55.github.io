@@ -68,7 +68,7 @@ nav {
 
 /* ---------- Main ---------- */
 main {
-  padding: 180px 32px 140px;
+  padding: 240px 32px 140px;
   animation: rise .7s cubic-bezier(.2, .7, .3, 1) both;
 }
 @keyframes rise {
@@ -119,7 +119,7 @@ a { color: var(--accent); text-underline-offset: 3px; }
 
 @media (max-width: 480px) {
   nav { flex-wrap: wrap; gap: 16px; padding: 32px 24px 28px; }
-  main { padding: 112px 24px 96px; }
+  main { padding: 152px 24px 96px; }
   h1 { font-size: 38px; margin-bottom: 48px; }
   h2 { padding-top: 40px; margin: 40px 0 18px; }
 }
