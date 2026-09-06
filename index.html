@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>甘仁达 · 个人主页</title>
+<meta name="description" content="甘仁达的个人主页 — 上海交通大学 数学与应用数学 2024级">
+<style>
+  :root {
+    --ink: #2f3e46;
+    --muted: #7a8b8f;
+    --accent: #6fb98f;
+    --accent-soft: #eef7f1;
+    --bg: #fdfdfb;
+    --line: #e8eeea;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Source Han Serif SC", "Noto Serif SC", Georgia, serif;
+    line-height: 1.9;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ---------- Header ---------- */
+  header {
+    padding: 96px 0 64px;
+    border-bottom: 1px solid var(--line);
+  }
+  .hello {
+    display: inline-block;
+    font-size: 13px;
+    letter-spacing: .2em;
+    color: var(--accent);
+    background: var(--accent-soft);
+    padding: 4px 14px;
+    border-radius: 999px;
+    margin-bottom: 28px;
+  }
+  h1 {
+    font-size: 44px;
+    font-weight: 700;
+    letter-spacing: .06em;
+    margin-bottom: 12px;
+  }
+  h1 .dot { color: var(--accent); }
+  .sub {
+    color: var(--muted);
+    font-size: 16px;
+    letter-spacing: .04em;
+  }
+  .sub b { color: var(--ink); font-weight: 600; }
+
+  /* ---------- Sections ---------- */
+  section { padding: 56px 0; border-bottom: 1px solid var(--line); }
+  section:last-of-type { border-bottom: none; }
+  h2 {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: .3em;
+    color: var(--accent);
+    margin-bottom: 24px;
+  }
+  p { margin-bottom: 12px; }
+  p.dim { color: var(--muted); font-size: 15px; }
+
+  ul.list { list-style: none; }
+  ul.list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 10px 0;
+    border-bottom: 1px dashed var(--line);
+    font-size: 15px;
+  }
+  ul.list li:last-child { border-bottom: none; }
+  ul.list .tag {
+    color: var(--muted);
+    font-size: 13px;
+    letter-spacing: .05em;
+    flex-shrink: 0;
+    margin-left: 16px;
+  }
+
+  a.link {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color .2s;
+  }
+  a.link:hover { border-bottom-color: var(--accent); }
+
+  /* ---------- Footer ---------- */
+  footer {
+    padding: 40px 0 64px;
+    color: var(--muted);
+    font-size: 13px;
+    letter-spacing: .1em;
+    text-align: center;
+  }
+  footer .leaf { color: var(--accent); }
+
+  @media (max-width: 480px) {
+    header { padding: 64px 0 48px; }
+    h1 { font-size: 34px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <span class="hello">HELLO · 你好</span>
+    <h1>甘仁达<span class="dot">.</span></h1>
+    <p class="sub"><b>数学与应用数学</b> · 上海交通大学 SJTU · <b>2024 级</b></p>
+  </header>
+
+  <section>
+    <h2>ABOUT / 关于</h2>
+    <p>我是甘仁达，上海交通大学数学科学学院 2024 级本科生，专业方向为数学与应用数学。</p>
+    <p class="dim">对纯粹的数学结构与真实世界的问题同样好奇。相信简洁之中自有力量。</p>
+  </section>
+
+  <section>
+    <h2>FOCUS / 兴趣方向</h2>
+    <ul class="list">
+      <li>数学分析 · 高等代数<span class="tag">基础</span></li>
+      <li>概率论与随机过程<span class="tag">探索中</span></li>
+      <li>优化与计算数学<span class="tag">探索中</span></li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>CONTACT / 联系</h2>
+    <ul class="list">
+      <li>GitHub<a class="link tag" href="https://github.com/Serein55" target="_blank" rel="noopener">@Serein55</a></li>
+      <li>主页<a class="link tag" href="https://serein55.github.io" target="_blank" rel="noopener">serein55.github.io</a></li>
+    </ul>
+  </section>
+
+  <footer>
+    <span class="leaf">❧</span>&nbsp; 甘仁达 · 以简驭繁 · © 2026
+  </footer>
+
+</div>
+</body>
+</html>
