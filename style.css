@@ -6,7 +6,7 @@
   --accent-soft: #eef6f1;
   --bg: #fcfcfa;
   --line: #e9efeb;
-  --font-text: "Times New Roman", "STZhongsong", "华文中宋", "Songti SC", SimSun, serif;
+  --font-text: "Microsoft YaHei Light", "Microsoft YaHei", "微软雅黑", "PingFang SC", "Helvetica Neue", Arial, sans-serif;
   --font-code: Consolas, "STZhongsong", "华文中宋", monospace;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -19,6 +19,7 @@ body {
   background: var(--bg);
   color: var(--ink);
   font-family: var(--font-text);
+  font-weight: 300;
   font-size: 16px;
   line-height: 1.7;
   letter-spacing: .005em;
