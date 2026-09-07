@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Darren Gan · π₀：Flow Matching 与数据流</title>
+<meta name="description" content="结合 pizero.py，梳理插值路径、训练目标、Euler 积分与 KV Cache。">
+<link rel="stylesheet" href="../../style.css">
+<link rel="stylesheet" href="../../learning.css">
+<link rel="stylesheet" href="../../assets/katex/katex.min.css">
+</head>
+<body>
+
+<nav class="wrap">
+  <a class="brand" href="../../index.html">Darren Gan</a>
+  <div class="links">
+    <a href="../../index.html">Intro</a>
+    <a href="../../research.html">Research</a>
+    <a href="../../learning.html" class="active" aria-current="page">Learning</a>
+    <a href="../../life.html">Life</a>
+    <a class="icon" href="https://github.com/Serein55" target="_blank" rel="noopener" aria-label="GitHub">
+      <svg viewBox="0 0 16 16" width="17" height="17" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+    </a>
+  </div>
+</nav>
+
+<main class="wrap note-page" id="top">
+  <header class="note-header">
+    <div class="breadcrumb"><a href="../../learning.html">Learning</a><span aria-hidden="true">/</span><a href="../../learning.html#embodied-ai">Embodied AI</a></div>
+    <p class="eyebrow">模型实现</p>
+    <h1>π₀：Flow Matching 与数据流</h1>
+    <p class="note-description">结合 pizero.py，梳理插值路径、训练目标、Euler 积分与 KV Cache。</p>
+  </header>
+  <details class="note-toc" open>
+    <summary>本文目录 <span>4 个章节</span></summary>
+    <ol><li><a href="#核心思路">核心思路</a></li>
+<li><a href="#一flow-路径定义-psit第-597-605-行">一、Flow 路径定义 — psi_t（第 597-605 行）</a></li>
+<li><a href="#二训练-forward第-607-661-行">二、训练 — forward（第 607-661 行）</a></li>
+<li><a href="#三推理-inferaction第-416-490-行">三、推理 — infer_action（第 416-490 行）</a></li></ol>
+  </details>
+  <article class="note-content" aria-label="π₀：Flow Matching 与数据流"><figure><a href="images/pi0-data-flow.png" target="_blank" rel="noopener" aria-label="查看原图：π₀ 模型数据流"><img src="images/pi0-data-flow.png" alt="π₀ 模型数据流" loading="lazy" decoding="async"></a><figcaption>π₀ 模型数据流 · <a href="images/pi0-data-flow.png" target="_blank" rel="noopener">查看原图</a></figcaption></figure>
+<h2 id="核心思路">核心思路</h2>
+<p>Conditional Flow Matching (CFM)：学习一个速度场 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi><mo stretchy="false">(</mo><msub><mi>x</mi><mi>t</mi></msub><mo separator="true">,</mo><mi>t</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">v(x_t, t)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">t</span><span class="mclose">)</span></span></span></span>，把噪声 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mn>0</mn></mrow><annotation encoding="application/x-tex">x0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord mathnormal">x</span><span class="mord">0</span></span></span></span> &quot;推&quot; 到真实动作 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mn>1</mn></mrow><annotation encoding="application/x-tex">x1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord mathnormal">x</span><span class="mord">1</span></span></span></span>。训练时在噪声-干净的插值路径上学速度，推理时用 Euler 积分沿速度场走 N 步。</p>
+<hr>
+<h2 id="一flow-路径定义-psit第-597-605-行">一、Flow 路径定义 — <code>psi_t</code>（第 597-605 行）</h2>
+<div class="code-block"><div class="code-label">python</div><pre tabindex="0" aria-label="python 代码"><code>def psi_t(x, x1, t):  # x = x0 (噪声)
+    t = t[:, None, None]  # (B,) → (B, 1, 1)
+    return (1 - (1 - σ_min) * t) * x + t * x1
+</code></pre></div>
+<p>这是线性插值路径：噪声 <code>x0</code> 到干净动作 <code>x1</code> 的直线。<code>σ_min</code>（默认 0.001）保证 <code>t=1</code> 时仍有一点点噪声，避免数值问题。</p>
+<ul>
+<li><strong>t=0</strong> → 纯噪声 <code>x0</code></li>
+<li><strong>t=1</strong> → <code>σ_min * x0 + x1 ≈ x1</code></li>
+</ul>
+<h2 id="二训练-forward第-607-661-行">二、训练 — <code>forward</code>（第 607-661 行）</h2>
+<p><strong>输入：</strong></p>
+<ul>
+<li>参数</li>
+<li><code>input_ids</code></li>
+<li><code>pixel_values</code></li>
+<li><code>proprios</code></li>
+<li><code>actions</code></li>
+<li><code>t</code></li>
+<li><code>causal_mask</code></li>
+</ul>
+<p><strong>输出：</strong></p>
+<ul>
+<li>标量 <code>loss = MSE(预测速度, 真实速度)</code></li>
+</ul>
+<p><strong>步骤：</strong></p>
+<div class="code-block"><div class="code-label">python</div><pre tabindex="0" aria-label="python 代码"><code>1. x0 = randn_like(actions)              # 纯噪声
+2. psi_t = psi_t(x0, actions, t)         # 噪声→干净的线性插值点
+3. inputs_embeds = VLM(image + text)     # 图像文本编码
+4. proprio_embeds = Linear(proprios)     # 本体感知投影
+5. time_cond = SinusoidalPosEmb(t)       # 时间步编码
+6. action_embeds = ActionEncoder(psi_t, [time_cond])  # 编码含噪动作
+7. action_embeds = JointModel(           # 三路联合 Transformer
+       {vlm, proprio, action}, time_cond
+   )[&quot;action&quot;]
+8. v_psi = Linear(action_embeds)         # 解码为预测速度
+9. d_psi = actions - (1-σ_min)*x0        # 真实速度 (直线方向)
+10. loss = MSE(v_psi, d_psi)             # 目标：学习这个方向</code></pre></div>
+<p><strong>直观理解：</strong>
+在噪声→干净路径的某个中间点 <code>psi_t</code>，模型被训练输出&quot;往干净方向的速度&quot;。每个时间步 <code>t</code> 都随机采样，覆盖整个路径。</p>
+<h2 id="三推理-inferaction第-416-490-行">三、推理 — <code>infer_action</code>（第 416-490 行）</h2>
+<p><strong>输入：</strong> 和训练相同，但没有 <code>actions</code>（那是要推理出的结果）。</p>
+<p><strong>输出：</strong> <code>(B, horizon_steps, action_dim)</code> — 预测的未来动作轨迹。</p>
+<p><strong>步骤：</strong></p>
+<div class="code-block"><div class="code-label">python</div><pre tabindex="0" aria-label="python 代码"><code># Phase 1: 预计算 VLM + Proprio 的 KV Cache（不变）
+1. inputs_embeds = VLM(image + text)     # 编码图像文本
+2. proprio_embeds = Linear(proprios)
+3. kv_caches = JointModel(               # 前向一次，缓存 KV
+       {vlm, proprio}, cache=append
+   )
+
+# Phase 2: 从噪声出发，Euler 积分去噪
+4. action = randn(B, horizon_steps, action_dim)  # 初始化：纯噪声
+5. Δt = 1 / num_inference_steps
+6. for step in range(num_inference_steps):
+     time_cond = embed(t)
+     action_embeds = ActionEncoder(action, [time_cond])
+     action_embeds = JointModel(
+         {action}, time_cond,
+         kv_caches=vlm_proprio_cache,    # 复用缓存的 VLM/Proprio KV
+         cache_mode=&quot;append_non_active&quot;  # action 不写缓存
+     )[&quot;action&quot;]
+     action_vel = Linear(action_embeds)   # 预测速度
+     action += Δt * action_vel            # Euler 步进
+     t += Δt
+</code></pre></div>
+<p><strong>关键优化：</strong>
+VLM 和 <code>proprio</code> 在推理时不变，KV cache 计算一次后复用。每个去噪步只重算 action expert（轻量），大幅节省计算。</p>
+</article>
+  <footer class="note-footer">
+    <div class="note-tools"><a href="../../learning.html#embodied-ai">← 全部笔记</a><a href="notes/pi0-framework.md" download>下载 Markdown</a><a href="#top">回到顶部 ↑</a></div>
+    <div class="note-pagination"><a href="overview.html"><span>上一篇</span>基础模型</a><a href="pi05.html"><span>下一篇</span>π₀.₅：训练配方与泛化</a></div>
+  </footer>
+</main>
+
+</body>
+</html>

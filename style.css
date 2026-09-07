@@ -6,13 +6,19 @@
   --accent-soft: #eef6f1;
   --bg: #fcfcfa;
   --line: #e9efeb;
+  --font-text: "Times New Roman", "STZhongsong", "华文中宋", "Songti SC", SimSun, serif;
+  --font-code: Consolas, "STZhongsong", "华文中宋", monospace;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html { -webkit-font-smoothing: antialiased; }
 body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100svh;
   background: var(--bg);
   color: var(--ink);
-  font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+  font-family: var(--font-text);
   font-size: 16px;
   line-height: 1.7;
   letter-spacing: .005em;
@@ -20,28 +26,32 @@ body {
 }
 ::selection { background: var(--accent-soft); color: var(--ink); }
 .wrap {
-  max-width: 720px;
+  width: 100%;
+  max-width: none;
   margin: 0 auto;
-  padding: 0 32px;
+  /* Keep vertical spacing with each section, rather than overriding it. */
+  padding-inline: clamp(24px, 5vw, 120px);
 }
 
 /* ---------- Nav ---------- */
 nav {
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
-  padding: 44px 32px 36px;
+  align-items: center;
+  gap: 32px;
+  padding-block: 48px 32px;
   border-bottom: 1px solid var(--line);
 }
 .brand {
-  font-family: "Newsreader", Georgia, serif;
-  font-size: 21px;
+  font-family: var(--font-text);
+  font-size: 22px;
   font-weight: 600;
   letter-spacing: .005em;
   color: var(--ink);
   text-decoration: none;
 }
-.links { display: flex; align-items: center; gap: 30px; }
+.brand { flex-shrink: 0; }
+.links { display: flex; align-items: center; gap: 34px; }
 .links a {
   position: relative;
   font-size: 13.5px;
@@ -49,7 +59,10 @@ nav {
   letter-spacing: .05em;
   color: var(--muted);
   text-decoration: none;
-  padding-bottom: 2px;
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding-block: 4px;
   transition: color .25s ease;
 }
 .links a:not(.icon)::after {
@@ -63,12 +76,14 @@ nav {
 .links a:not(.icon):hover { color: var(--ink); }
 .links a:not(.icon):hover::after { width: 100%; }
 .links a.active { color: var(--accent); }
-.links a.icon { display: flex; color: var(--muted); opacity: .8; }
+.links a.icon { justify-content: center; min-width: 24px; color: var(--muted); opacity: .8; }
 .links a.icon:hover { color: var(--ink); opacity: 1; }
 
 /* ---------- Main ---------- */
 main {
-  padding: 240px 32px 140px;
+  flex: 1;
+  min-width: 0;
+  padding-block: clamp(112px, 15vw, 192px) 144px;
   animation: rise .7s cubic-bezier(.2, .7, .3, 1) both;
 }
 @keyframes rise {
@@ -76,50 +91,62 @@ main {
   to   { opacity: 1; transform: none; }
 }
 h1 {
-  font-family: "Newsreader", Georgia, serif;
-  font-size: 52px;
+  font-family: var(--font-text);
+  font-size: clamp(40px, 5vw, 56px);
   font-weight: 500;
   letter-spacing: -.005em;
-  line-height: 1.15;
-  margin-bottom: 44px;
+  line-height: 1.2;
+  margin-bottom: 56px;
 }
 h1::after {
   content: "";
   display: block;
   width: 44px;
   height: 2px;
-  margin-top: 26px;
+  margin-top: 30px;
   background: var(--accent);
 }
 h2 {
-  font-family: "Newsreader", Georgia, serif;
+  font-family: var(--font-text);
   font-size: 15px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: .18em;
   color: var(--muted);
-  padding-top: 40px;
-  margin: 40px 0 18px;
+  line-height: 1.5;
+  padding-top: 48px;
+  margin: 56px 0 22px;
   border-top: 1px solid var(--line);
 }
 h2:first-of-type {
-  margin: 0;
+  margin-top: 0;
   padding-top: 0;
   border-top: none;
 }
 p {
-  max-width: 62ch;
-  margin-bottom: 14px;
+  max-width: none;
+  margin-bottom: 24px;
   color: var(--soft);
-  font-size: 16px;
-  line-height: 1.75;
+  font-size: 17px;
+  line-height: 1.9;
+  overflow-wrap: break-word;
 }
 p:last-child { margin-bottom: 0; }
 a { color: var(--accent); text-underline-offset: 3px; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; }
 
-@media (max-width: 480px) {
-  nav { flex-wrap: wrap; gap: 16px; padding: 32px 24px 28px; }
-  main { padding: 152px 24px 96px; }
-  h1 { font-size: 38px; margin-bottom: 48px; }
-  h2 { padding-top: 40px; margin: 40px 0 18px; }
+@media (max-width: 640px) {
+  nav { flex-direction: column; align-items: flex-start; gap: 24px; padding-block: 32px 24px; }
+  .links { width: 100%; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  .links a { font-size: 13px; min-height: 40px; }
+  main { padding-block: 104px 96px; }
+  h1 { margin-bottom: 48px; }
+  h1::after { margin-top: 24px; }
+  h2 { padding-top: 40px; margin-block: 48px 20px; }
+  p { font-size: 16px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  main { animation: none; }
+  .links a, .links a::after { transition: none; }
 }

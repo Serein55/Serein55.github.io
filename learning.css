@@ -1,0 +1,111 @@
+/* Learning keeps the same paper, ink, and green accents as the main site. */
+.learning-page { padding-top: clamp(88px, 10vw, 128px); }
+.learning-page > h1 { margin-bottom: 32px; }
+.learning-intro { margin-bottom: 72px; }
+.collection-heading { display: flex; align-items: baseline; gap: 20px; padding-block: 16px; cursor: pointer; list-style: none; border-bottom: 1px solid var(--line); }
+.collection-heading::-webkit-details-marker { display: none; }
+.collection-heading::after { content: "+"; color: var(--accent); font-size: 20px; line-height: 1; }
+.note-collection[open] > .collection-heading::after { content: "−"; }
+.collection-heading:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; }
+.collection-heading:hover h2 { color: var(--accent); }
+.collection-heading h2 { font-size: 18px; letter-spacing: .08em; color: var(--ink); margin: 0 auto 0 0; padding: 0; border: 0; }
+.collection-heading > span, .collection-description { font-size: 13px; color: var(--soft); }
+.collection-description { margin-top: 12px; margin-bottom: 32px; }
+.note-list { list-style: none; border-top: 1px solid var(--line); }
+.note-list > li { border-bottom: 1px solid var(--line); }
+.note-entry { display: grid; grid-template-columns: 30px minmax(0, 1fr) 20px; gap: 22px; padding: 32px 0 36px; text-decoration: none; }
+.note-number { font-family: var(--font-text); font-size: 19px; color: var(--accent); padding-top: 24px; }
+.note-category, .eyebrow { font-size: 12px; letter-spacing: .08em; color: var(--soft); }
+.note-entry h3 { font-family: var(--font-text); font-size: 24px; font-weight: 500; line-height: 1.55; color: var(--ink); margin: 8px 0 12px; }
+.note-entry p { font-size: 14px; line-height: 1.9; margin: 0; }
+.note-arrow { align-self: center; color: var(--accent); transition: transform .2s ease; }
+.note-entry:hover h3 { color: var(--accent); }
+.note-entry:hover .note-arrow { transform: translate(2px, -2px); }
+
+/* Article typography is scoped to avoid changing the sparse landing pages. */
+.note-page { padding-top: 72px; font-family: var(--font-text); }
+.breadcrumb { display: flex; flex-wrap: wrap; gap: 14px; font-size: 13px; margin-bottom: 48px; color: var(--muted); }
+.breadcrumb a { text-decoration: none; color: var(--soft); }
+.breadcrumb a:hover { color: var(--accent); }
+.note-header .eyebrow { margin-bottom: 16px; }
+.note-header h1 { font-family: var(--font-text); font-size: clamp(30px, 4vw, 42px); line-height: 1.45; margin-bottom: 28px; text-wrap: balance; overflow-wrap: anywhere; }
+.note-header h1::after { margin-top: 24px; }
+.note-description { font-size: 15px; line-height: 2; margin-bottom: 40px; max-width: none; }
+.note-toc { margin: 40px 0 64px; padding: 20px 24px; border: 1px solid var(--line); border-radius: 3px; background: var(--accent-soft); }
+.note-toc summary, .code-fold summary { cursor: pointer; font-size: 14px; font-weight: 500; }
+.note-toc summary > span { color: var(--soft); font-size: 12px; font-weight: 400; margin-left: 12px; }
+.note-toc ol { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 30px; list-style: none; margin-top: 20px; }
+.note-toc li { min-width: 0; }
+.note-toc a { color: var(--soft); font-size: 13px; text-decoration: none; overflow-wrap: anywhere; }
+.note-toc a:hover { color: var(--accent); text-decoration: underline; }
+.note-content { color: var(--soft); font-size: 16px; line-height: 2; overflow-wrap: anywhere; }
+.note-content p { max-width: none; font-size: inherit; line-height: inherit; margin: 0 0 24px; }
+.note-content :is(h2, h3, h4, h5, h6) { font-family: inherit; color: var(--ink); font-weight: 600; line-height: 1.65; letter-spacing: 0; text-transform: none; scroll-margin-top: 32px; }
+.note-content h2 { font-size: 25px; margin: 72px 0 28px; padding-top: 40px; border-top: 1px solid var(--line); }
+.note-content > h2:first-child { margin-top: 0; padding-top: 0; border: 0; }
+.note-content h3 { font-size: 20px; margin: 48px 0 20px; }
+.note-content h4 { font-size: 17px; margin: 36px 0 16px; }
+.note-content :is(h5, h6) { font-size: 16px; margin: 28px 0 16px; }
+.note-content ul, .note-content ol { padding-left: 1.6em; margin: 20px 0 28px; }
+.note-content li { padding-left: 5px; margin: 8px 0; }
+.note-content li :is(ul, ol) { margin: 10px 0 16px; }
+.note-content li > p { margin-bottom: 12px; }
+.note-content li::marker { color: var(--accent); }
+.note-content strong { color: var(--ink); font-weight: 600; }
+.note-content blockquote { margin: 28px 0; border-left: 2px solid var(--accent); padding: 12px 24px; background: var(--accent-soft); }
+.note-content blockquote > :last-child { margin-bottom: 0; }
+.note-content hr { border: 0; height: 1px; background: var(--line); margin: 40px 0; }
+.note-content hr + h2 { border-top: 0; padding-top: 0; margin-top: 48px; }
+.note-content :not(pre) > code { font-family: var(--font-code); font-size: .87em; padding: .15em .35em; background: #f0f3ef; border-radius: 3px; color: #385a4c; box-decoration-break: clone; }
+.code-block, .code-fold { margin: 28px 0 36px; border: 1px solid var(--line); border-radius: 3px; background: #f5f7f3; overflow: hidden; }
+.code-label { padding: 8px 20px; font-size: 11px; letter-spacing: .05em; color: var(--soft); border-bottom: 1px solid var(--line); }
+.code-fold summary { padding: 16px 20px; color: var(--ink); }
+.code-fold summary span { font-size: 12px; font-weight: 400; margin-left: 10px; color: var(--soft); }
+.code-fold[open] summary { border-bottom: 1px solid var(--line); }
+.note-content pre { margin: 0; padding: 22px 24px; max-width: 100%; overflow-x: auto; line-height: 1.8; font-size: 13px; tab-size: 4; white-space: pre; overflow-wrap: normal; }
+.note-content pre code { font-family: var(--font-code); color: var(--ink); }
+.table-scroll { width: 100%; overflow-x: auto; margin: 28px 0 36px; border: 1px solid var(--line); border-radius: 3px; }
+.note-content table { width: 100%; border-collapse: collapse; font-size: 14px; line-height: 1.85; text-align: left; }
+.note-content th, .note-content td { padding: 14px 18px; vertical-align: top; min-width: 110px; border-bottom: 1px solid var(--line); }
+.note-content th { background: var(--accent-soft); font-weight: 500; color: var(--ink); }
+.note-content tbody tr:last-child td { border-bottom: 0; }
+.note-content figure { max-width: 960px; margin: 36px 0; }
+.note-content figure > a { display: block; padding: 16px; background: #fff; border: 1px solid var(--line); border-radius: 3px; }
+.note-content figure img { display: block; max-width: 100%; width: 100%; height: auto; }
+.note-content figcaption { color: var(--soft); font-size: 12px; text-align: center; margin-top: 12px; }
+.math-block { max-width: 100%; overflow-x: auto; overflow-y: hidden; padding: 16px 8px; margin: 24px 0 32px; font-size: .96em; }
+.math-block .katex-display { margin: 0; }
+.math-block .katex-display > .katex { text-align: left; }
+.note-content .katex { font-size: 1.08em; overflow-wrap: normal; }
+.note-content p .katex, .note-content li .katex { max-width: 100%; }
+.note-footer { border-top: 1px solid var(--line); margin-top: 80px; padding-top: 28px; }
+.note-tools { display: flex; flex-wrap: wrap; gap: 16px 28px; font-size: 13px; }
+.note-tools a { text-decoration: none; }
+.note-pagination { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 40px; }
+.note-pagination a { text-decoration: none; color: var(--ink); font-size: 14px; }
+.note-pagination > :nth-child(2) { text-align: right; }
+.note-pagination span { display: block; color: var(--soft); font-size: 12px; margin-bottom: 8px; }
+
+@media (max-width: 640px) {
+  .learning-page { padding-top: 80px; }
+  .learning-intro { margin-bottom: 56px; font-size: 15px; }
+  .note-entry { grid-template-columns: 20px minmax(0, 1fr) 16px; gap: 12px; padding-block: 28px; }
+  .note-entry h3 { font-size: 21px; }
+  .note-entry p { font-size: 13px; }
+  .note-page { padding-top: 40px; }
+  .breadcrumb { margin-bottom: 36px; }
+  .note-content { font-size: 15px; }
+  .note-description { font-size: 14px; }
+  .note-toc { padding: 18px; margin-bottom: 48px; }
+  .note-toc ol { grid-template-columns: 1fr; gap: 12px; }
+  .note-content h2 { font-size: 22px; margin-top: 56px; padding-top: 32px; }
+  .note-content h3 { font-size: 18px; margin-top: 36px; }
+  .note-content blockquote { padding: 12px 16px; }
+  .note-content pre { padding: 18px; font-size: 12px; }
+  .note-content figure > a { padding: 8px; }
+  .note-content th, .note-content td { padding: 12px 14px; }
+  .note-pagination { gap: 20px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .note-arrow { transition: none; }
+}

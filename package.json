@@ -1,0 +1,13 @@
+{
+  "name": "darren-gan-personal-site",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build-learning.mjs",
+    "preview": "node scripts/preview.mjs"
+  },
+  "devDependencies": {
+    "katex": "0.18.7",
+    "marked": "17.0.5"
+  }
+}

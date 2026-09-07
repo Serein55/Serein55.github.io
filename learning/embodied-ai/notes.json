@@ -1,0 +1,26 @@
+[
+  {
+    "slug": "overview",
+    "title": "基础模型",
+    "category": "基础与模型",
+    "description": "从 ViT、OpenVLA、Diffusion Policy 到 RDT-1B、LoRA、π₀ 与 RoboTwin，串起模型架构和实践思考。"
+  },
+  {
+    "slug": "pi0-framework",
+    "title": "π₀：Flow Matching 与数据流",
+    "category": "模型实现",
+    "description": "结合 pizero.py，梳理插值路径、训练目标、Euler 积分与 KV Cache。"
+  },
+  {
+    "slug": "pi05",
+    "title": "π₀.₅：训练配方与泛化",
+    "category": "论文阅读",
+    "description": "整理异构数据协训练、FAST 与 Flow Matching，以及高层子任务和低层动作的联合建模。"
+  },
+  {
+    "slug": "pi-rl",
+    "title": "π-RL：Flow Matching 与强化学习",
+    "category": "论文阅读",
+    "description": "从动作概率的计算难点出发，记录 Flow-Noise、Flow-SDE 与 PPO 的衔接和推导。"
+  }
+]
