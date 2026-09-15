@@ -5,6 +5,250 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Darren Gan · Research</title>
 <link rel="stylesheet" href="style.css">
+<style>
+/* ===== ALOHA 双臂机器人 · 拉门露出小鳄鱼（仅限本页） ===== */
+.rs-scene { margin: 8px 0 0; }
+.rs-stage {
+  position: relative;
+  width: 320px;
+  max-width: 100%;
+  height: 240px;
+  perspective: 720px;
+}
+/* ---- 门框与门洞 ---- */
+.rs-frame {
+  position: absolute;
+  left: 30px; top: 26px;
+  width: 130px; height: 186px;
+  background: #efe6d2;
+  border: 3px solid #d9c9a8;
+  border-radius: 6px 6px 3px 3px;
+}
+.rs-doorway {
+  position: absolute;
+  left: 8px; top: 8px;
+  width: 108px; height: 166px;
+  background: #eef2ea;
+  border-radius: 3px;
+  overflow: hidden;
+}
+/* 房间地面线 */
+.rs-doorway::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 20px;
+  height: 1px;
+  background: #d7e0d2;
+}
+/* ---- 小鳄鱼 ---- */
+.rs-croc {
+  position: absolute;
+  left: 55%; bottom: 6px;
+  transform: translateX(-50%);
+  width: 96px; height: 84px;
+}
+.rs-croc .tail {
+  transform-box: fill-box;
+  transform-origin: 85% 60%;
+  animation: rs-wag 1.6s ease-in-out infinite;
+}
+.rs-croc .eye-close {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  animation: rs-blink 4.2s ease-in-out infinite;
+}
+/* ---- 门（3D 旋转） ---- */
+.rs-door {
+  position: absolute;
+  left: 38px; top: 34px;
+  width: 110px; height: 162px;
+  background: linear-gradient(90deg, #e3d4b0, #d3bf92 78%, #c8b183);
+  border: 2px solid #b99f6e;
+  border-left-width: 4px;
+  border-radius: 3px 8px 8px 3px;
+  transform-origin: left center;
+  transform-style: preserve-3d;
+  z-index: 3;
+  animation: rs-door 7.2s ease-in-out infinite;
+}
+.rs-door::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(255,255,255,.18), rgba(0,0,0,.05) 55%, rgba(0,0,0,.12));
+  border-radius: inherit;
+}
+.rs-handle {
+  position: absolute;
+  right: 9px; top: 50%;
+  width: 9px; height: 9px;
+  margin-top: -4.5px;
+  background: #7d6643;
+  border-radius: 50%;
+  box-shadow: 0 1px 2px rgba(0,0,0,.35);
+}
+/* ---- ALOHA 机身框架 ---- */
+.rs-arm { position: absolute; inset: 0; z-index: 5; }
+.aloha-post {
+  position: absolute;
+  left: 232px; top: 70px;
+  width: 16px; height: 120px;
+  background: linear-gradient(90deg, #c7cfd4, #e6ebee 45%, #b9c3c9);
+  border-radius: 2px;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.5), 0 1px 3px rgba(0,0,0,.08);
+  z-index: 2;
+}
+.aloha-post::after { /* 绿色线缆 */
+  content: "";
+  position: absolute;
+  left: 13px; top: 6px; bottom: 6px;
+  width: 2px;
+  background: #4a9d72;
+  border-radius: 1px;
+}
+.aloha-bar {
+  position: absolute;
+  left: 222px; top: 62px;
+  width: 36px; height: 9px;
+  background: linear-gradient(180deg, #8d99a1, #6f7b83);
+  border-radius: 2px;
+  z-index: 3;
+}
+.aloha-base {
+  position: absolute;
+  left: 216px; top: 196px;
+  width: 48px; height: 14px;
+  background: linear-gradient(180deg, #d7dde1, #aeb9c0);
+  border-radius: 3px 3px 7px 7px;
+  box-shadow: inset 0 -3px 0 rgba(0,0,0,.12);
+  z-index: 2;
+}
+/* ---- ALOHA 机械臂（左右各一条，嵌套关节：上臂>前臂>夹爪） ---- */
+.al-arm { position: absolute; top: 0; left: 0; width: 320px; height: 240px; z-index: 5; }
+.al-arm .al-upper {
+  position: absolute;
+  width: 70px; height: 10px;
+  background: linear-gradient(180deg, #454f56, #2f383e);
+  border-radius: 5px;
+  transform-origin: right center;
+}
+.al-arm .al-upper::after { /* 肩关节 */
+  content: "";
+  position: absolute;
+  left: 62px; top: -2px;
+  width: 14px; height: 14px;
+  background: radial-gradient(circle at 35% 35%, #7a8790, #4a545b 70%);
+  border-radius: 50%;
+  box-shadow: inset 0 -1px 1px rgba(0,0,0,.35);
+}
+.al-arm .al-fore {
+  position: absolute;
+  width: 60px; height: 9px;
+  background: linear-gradient(180deg, #3c454c, #262e34);
+  border-radius: 5px;
+  transform-origin: right center;
+}
+.al-arm .al-fore::after { /* 肘关节 */
+  content: "";
+  position: absolute;
+  left: 53px; top: -2px;
+  width: 13px; height: 13px;
+  background: radial-gradient(circle at 35% 35%, #75828b, #454f56 70%);
+  border-radius: 50%;
+  box-shadow: inset 0 -1px 1px rgba(0,0,0,.35);
+}
+.al-arm .al-grip { /* 两指夹爪，右端=腕点 */
+  position: absolute;
+  width: 24px; height: 16px;
+  transform-origin: right center;
+}
+.al-arm .al-grip i {
+  position: absolute;
+  top: 3px;
+  width: 18px; height: 7px;
+  background: #20262b;
+  border-radius: 3px 2px 2px 5px;
+  transform-origin: right center;
+}
+.al-arm .al-grip .g1 { left: 0; }
+.al-arm .al-grip .g2 { left: 6px; }
+/* 左臂（拉门）：肩关节在 (232,120) */
+.al-left .al-upper { left: 162px; top: 115px;  animation: al-l-upper 7.2s ease-in-out infinite; }
+.al-left .al-fore  { left: -60px; top: 0.5px;  animation: al-l-fore 7.2s ease-in-out infinite; }
+.al-left .al-grip  { left: -24px; top: -3.5px; animation: al-l-claw 7.2s ease-in-out infinite; }
+.al-left .al-grip .g1 { animation: al-grip1 7.2s ease-in-out infinite; }
+.al-left .al-grip .g2 { animation: al-grip2 7.2s ease-in-out infinite; }
+/* 右臂（示意/欢迎）：肩关节在 (248,120) */
+.al-right .al-upper { left: 178px; top: 115px;  animation: al-r-upper 7.2s ease-in-out infinite; }
+.al-right .al-fore  { left: -60px; top: 0.5px;  animation: al-r-fore 7.2s ease-in-out infinite; }
+.al-right .al-grip  { left: -24px; top: -3.5px; }
+.al-right .al-grip .g1 { transform: rotate(15deg); }
+.al-right .al-grip .g2 { transform: rotate(-15deg); }
+/* ---- 关键帧 ---- */
+@keyframes rs-door {
+  0%, 20%  { transform: rotateY(0deg); }
+  36%      { transform: rotateY(-30deg); }
+  42%, 78% { transform: rotateY(-93deg); }
+  92%, 100%{ transform: rotateY(0deg); }
+}
+/* 左臂：垂下 -> 抓把手 -> 拉门 -> 松开缩回 -> 垂下 */
+@keyframes al-l-upper {
+  0%, 10%  { transform: rotate(-62deg); }
+  14%, 20% { transform: rotate(30.2deg); }
+  36%      { transform: rotate(28deg); }
+  42%, 100%{ transform: rotate(-62deg); }
+}
+@keyframes al-l-fore {
+  0%, 10%  { transform: rotate(0deg); }
+  14%, 20% { transform: rotate(-114.5deg); }
+  36%      { transform: rotate(-101.1deg); }
+  42%, 100%{ transform: rotate(0deg); }
+}
+@keyframes al-l-claw {
+  0%, 10%  { transform: rotate(0deg) translateX(6px); }
+  14%, 20% { transform: rotate(0deg) translateX(0px); }
+  36%      { transform: rotate(3deg) translateX(0px); }
+  42%, 100%{ transform: rotate(0deg) translateX(3px); }
+}
+@keyframes al-grip1 {
+  0%, 14%  { transform: rotate(18deg); }
+  20%, 36% { transform: rotate(4deg); }
+  42%, 100%{ transform: rotate(18deg); }
+}
+@keyframes al-grip2 {
+  0%, 14%  { transform: rotate(-18deg); }
+  20%, 36% { transform: rotate(-4deg); }
+  42%, 100%{ transform: rotate(-18deg); }
+}
+/* 右臂：垂下 -> 抬起欢迎（门开全程） -> 垂下 */
+@keyframes al-r-upper {
+  0%, 14%  { transform: rotate(-62deg); }
+  42%, 78% { transform: rotate(-142.9deg); }
+  92%, 100%{ transform: rotate(-62deg); }
+}
+@keyframes al-r-fore {
+  0%, 14%  { transform: rotate(0deg); }
+  42%, 78% { transform: rotate(-126.3deg); }
+  92%, 100%{ transform: rotate(0deg); }
+}
+@keyframes rs-wag {
+  0%, 100% { transform: rotate(-6deg); }
+  50%      { transform: rotate(8deg); }
+}
+@keyframes rs-blink {
+  0%, 92%, 100% { transform: scaleY(1); }
+  95%           { transform: scaleY(.12); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rs-stage, .rs-door, .al-arm, .al-arm * , .rs-croc .tail, .rs-croc .eye-close { animation: none; }
+  .rs-door { transform: rotateY(-93deg); }
+  .al-left .al-upper { transform: rotate(-62deg); }
+  .al-left .al-fore { transform: rotate(0deg); }
+  .al-left .al-grip { transform: rotate(0deg) translateX(3px); }
+  .al-right .al-upper { transform: rotate(-62deg); }
+  .al-right .al-fore { transform: rotate(0deg); }
+}
+</style>
 </head>
 <body>
 
@@ -23,6 +267,51 @@
 
 <main class="wrap">
   <h1>Research</h1>
+
+  <div class="rs-scene" aria-hidden="true">
+    <div class="rs-stage">
+      <div class="rs-frame">
+        <div class="rs-doorway">
+          <svg class="rs-croc" viewBox="0 0 96 84" xmlns="http://www.w3.org/2000/svg">
+            <path class="tail" d="M24 48 Q6 42 10 30 Q13 25 19 27 Q14 36 20 42 Z" fill="#5aa180"/>
+            <ellipse cx="50" cy="54" rx="34" ry="15" fill="#5aa180"/>
+            <ellipse cx="52" cy="58" rx="25" ry="9" fill="#d9eddf"/>
+            <path d="M34 41 L39 32 L44 41 Z" fill="#447f64"/>
+            <path d="M48 39 L53 30 L58 39 Z" fill="#447f64"/>
+            <circle cx="78" cy="44" r="12.5" fill="#5aa180"/>
+            <path d="M70 49 Q77 55 88 50" stroke="#3d6b54" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+            <g class="eye-close">
+              <circle cx="83" cy="40" r="4.6" fill="#fff"/>
+              <circle cx="84.2" cy="40" r="2.3" fill="#26363d"/>
+            </g>
+            <circle cx="69" cy="41" r="1.6" fill="#447f64"/>
+            <path d="M36 66 L30 74 M44 67 L40 75" stroke="#5aa180" stroke-width="5" stroke-linecap="round"/>
+            <path d="M62 66 L68 74 M70 65 L76 72" stroke="#5aa180" stroke-width="5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="rs-door"><span class="rs-handle"></span></div>
+      </div>
+      <div class="rs-arm">
+        <div class="aloha-bar"></div>
+        <div class="aloha-post"></div>
+        <div class="aloha-base"></div>
+        <div class="al-arm al-left">
+          <div class="al-upper">
+            <div class="al-fore">
+              <div class="al-grip"><i class="g1"></i><i class="g2"></i></div>
+            </div>
+          </div>
+        </div>
+        <div class="al-arm al-right">
+          <div class="al-upper">
+            <div class="al-fore">
+              <div class="al-grip"><i class="g1"></i><i class="g2"></i></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </main>
 
 </body>
