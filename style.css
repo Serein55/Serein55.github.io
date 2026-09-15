@@ -1,3 +1,14 @@
+/* 正文按字符集拆分：英文（拉丁）用微软雅黑 Light，中文用华文中宋 */
+@font-face {
+  font-family: "Text Latin";
+  src: local("Microsoft YaHei Light"), local("Microsoft YaHei UI Light"), local("Microsoft YaHei");
+  unicode-range: U+0000-00FF, U+0100-024F, U+1E00-1EFF, U+2000-206F, U+2190-21FF, U+2200-22FF, U+2500-25FF;
+}
+@font-face {
+  font-family: "Text CJK";
+  src: local("STZhongsong"), local("华文中宋");
+  unicode-range: U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
+}
 :root {
   --ink: #26363d;
   --soft: #4a5c62;
@@ -6,7 +17,7 @@
   --accent-soft: #eef6f1;
   --bg: #fcfcfa;
   --line: #e9efeb;
-  --font-text: "Microsoft YaHei Light", "Microsoft YaHei", "微软雅黑", "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+  --font-text: "Text Latin", "Text CJK", "Microsoft YaHei Light", "STZhongsong", "华文中宋", serif;
   --font-code: Consolas, "STZhongsong", "华文中宋", monospace;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
