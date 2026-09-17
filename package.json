@@ -8,6 +8,7 @@
   },
   "devDependencies": {
     "katex": "0.18.7",
-    "marked": "17.0.5"
+    "marked": "17.0.5",
+    "pdfjs-dist": "4.10.38"
   }
 }

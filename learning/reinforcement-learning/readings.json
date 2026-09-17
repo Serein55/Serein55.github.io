@@ -1,0 +1,10 @@
+[
+  {
+    "slug": "rl-mdp-to-ppo",
+    "title": "强化学习：从 MDP 到 PPO",
+    "category": "PDF 讲义",
+    "description": "53 页讲义：从 MDP、Bellman 方程与 TD 学习，到 policy gradient、TRPO、PPO 目标函数，再到 stable-baselines3 的实现细节。",
+    "file": "rl-mdp-to-ppo.pdf",
+    "pages": 53
+  }
+]

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Darren Gan · 强化学习：从 MDP 到 PPO</title>
+<meta name="description" content="53 页讲义：从 MDP、Bellman 方程与 TD 学习，到 policy gradient、TRPO、PPO 目标函数，再到 stable-baselines3 的实现细节。">
+<link rel="stylesheet" href="../../style.css">
+<link rel="stylesheet" href="../../learning.css">
+<link rel="stylesheet" href="../../reader.css">
+<script type="module" src="../../reader.mjs"></script>
+</head>
+<body>
+
+<nav class="wrap">
+  <a class="brand" href="../../index.html">Darren Gan</a>
+  <div class="links">
+    <a href="../../index.html">Intro</a>
+    <a href="../../research.html">Research</a>
+    <a href="../../learning.html" class="active" aria-current="page">Learning</a>
+    <a class="icon" href="https://github.com/Serein55" target="_blank" rel="noopener" aria-label="GitHub">
+      <svg viewBox="0 0 16 16" width="17" height="17" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+    </a>
+  </div>
+</nav>
+
+<main class="wrap note-page" id="top">
+  <header class="note-header">
+    <div class="breadcrumb"><a href="../../learning.html">Learning</a><span aria-hidden="true">/</span><a href="../../learning.html#reinforcement-learning">强化学习</a></div>
+    <p class="eyebrow">PDF 讲义</p>
+    <h1>强化学习：从 MDP 到 PPO</h1>
+    <p class="note-description">53 页讲义：从 MDP、Bellman 方程与 TD 学习，到 policy gradient、TRPO、PPO 目标函数，再到 stable-baselines3 的实现细节。</p>
+  </header>
+  <div class="reader" data-reader data-file="rl-mdp-to-ppo.pdf" data-slug="rl-mdp-to-ppo">
+    <div class="reader-bar" role="toolbar" aria-label="讲义阅读工具栏">
+      <button type="button" class="reader-btn" data-action="toc" aria-expanded="false" aria-controls="reader-toc">目录</button>
+      <div class="reader-group">
+        <button type="button" class="reader-btn" data-action="prev" aria-label="上一页">←</button>
+        <label class="reader-pager"><span class="reader-sr">页码</span><input type="text" inputmode="numeric" value="1" data-page-input aria-label="页码"><span class="reader-total">/ <span data-page-total>–</span></span></label>
+        <button type="button" class="reader-btn" data-action="next" aria-label="下一页">→</button>
+      </div>
+      <div class="reader-group">
+        <button type="button" class="reader-btn" data-action="zoom-out" aria-label="缩小">−</button>
+        <span class="reader-zoom" data-zoom-label>100%</span>
+        <button type="button" class="reader-btn" data-action="zoom-in" aria-label="放大">＋</button>
+        <button type="button" class="reader-btn" data-action="fit" aria-pressed="true">适应宽度</button>
+      </div>
+      <div class="reader-group reader-group-end">
+        <button type="button" class="reader-btn" data-action="zen" aria-pressed="false">专注阅读</button>
+        <a class="reader-btn" href="rl-mdp-to-ppo.pdf" download>下载 PDF</a>
+        <a class="reader-btn" href="rl-mdp-to-ppo.pdf" target="_blank" rel="noopener">新窗口打开</a>
+      </div>
+    </div>
+    <div class="reader-progress" aria-hidden="true"><span data-progress></span></div>
+    <div class="reader-body">
+      <aside class="reader-toc" id="reader-toc" data-toc aria-label="讲义目录">
+        <div class="reader-toc-head"><span>书签目录</span><button type="button" class="reader-toc-close" data-action="toc-close" aria-label="关闭目录">×</button></div>
+        <nav class="reader-outline" data-outline><p class="reader-empty">正在读取目录…</p></nav>
+      </aside>
+      <div class="reader-backdrop" data-backdrop></div>
+      <div class="reader-view" data-view tabindex="0" aria-label="讲义正文">
+        <p class="reader-status" data-status>正在加载讲义…</p>
+        <div class="reader-pages" data-pages></div>
+      </div>
+    </div>
+    <p class="reader-hint" data-hint hidden></p>
+    <noscript><p class="reader-hint">当前浏览器未启用 JavaScript，可<a href="rl-mdp-to-ppo.pdf">直接打开 PDF</a>阅读。</p></noscript>
+  </div>
+  <footer class="note-footer">
+    <div class="note-tools"><a href="../../learning.html#reinforcement-learning">← 全部讲义</a><a href="rl-mdp-to-ppo.pdf" download>下载 PDF</a><a href="#top">回到顶部 ↑</a></div>
+  </footer>
+</main>
+
+</body>
+</html>
