@@ -1,13 +1,13 @@
-/* 正文按字符集拆分：英文（拉丁）用微软雅黑 Light，中文用华文中宋 */
+/* 全站统一使用华文中宋：中西文同一字体，缺字时按宋体系列逐字回退 */
 @font-face {
-  font-family: "Text Latin";
-  src: local("Microsoft YaHei Light"), local("Microsoft YaHei UI Light"), local("Microsoft YaHei");
-  unicode-range: U+0000-00FF, U+0100-024F, U+1E00-1EFF, U+2000-206F, U+2190-21FF, U+2200-22FF, U+2500-25FF;
-}
-@font-face {
-  font-family: "Text CJK";
-  src: local("STZhongsong"), local("华文中宋");
-  unicode-range: U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
+  font-family: "Text Song";
+  src: local("STZhongsong"),
+       local("华文中宋"),
+       local("Songti SC"),
+       local("Noto Serif CJK SC"),
+       local("Source Han Serif SC"),
+       local("SimSun");
+  font-display: swap;
 }
 :root {
   --ink: #26363d;
@@ -17,8 +17,8 @@
   --accent-soft: #eef6f1;
   --bg: #fcfcfa;
   --line: #e9efeb;
-  --font-text: "Text Latin", "Text CJK", "Microsoft YaHei Light", "STZhongsong", "华文中宋", serif;
-  --font-code: Consolas, "STZhongsong", "华文中宋", monospace;
+  --font-text: "Text Song", "STZhongsong", "华文中宋", "Songti SC", "Noto Serif CJK SC", "Source Han Serif SC", "SimSun", serif;
+  --font-code: Consolas, "Cascadia Mono", "Text Song", "STZhongsong", "华文中宋", monospace;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html { -webkit-font-smoothing: antialiased; }
