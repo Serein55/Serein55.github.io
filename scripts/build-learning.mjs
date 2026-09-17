@@ -19,7 +19,6 @@ const collections = [
     title: '强化学习',
     unit: '份讲义',
     type: 'readings',
-    description: '以 PDF 讲义形式保存的课程笔记，支持站内阅读、书签目录跳转与文字选中。',
   },
 ];
 
