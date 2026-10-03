@@ -12,13 +12,13 @@
 // 符合人体工学的弧线移动，来得到连续、可信的肘部轨迹。
 //
 // 三个关键约束：
-// 1. 行程上限。肩到单杠只有 shoulderY − barY = 90px，maxLift 必须让肩部
-//    停在单杠高度附近。原实现让 lift 涨到 188，把肩拉到单杠上方近 100px，
-//    手臂被迫折叠——这是原轨迹不符合人体力学的根因。
+// 1. 行程区间。maxLift 不能只看「肩不超过单杠」——那样下巴只比杠高 1px，
+//    视觉上等于没上去。真正的判据是**下巴是否明显高过单杠**（见 maxLift 处）。
+//    原实现让 lift 涨到 188，把肩拉到单杠上方近 100px，手臂被迫折叠。
 // 2. 骨段长度。53/52 取自 SVG 静态路径 M136 155L99 117L108 65，
 //    是原作者画好的比例；两段之和略小于肩—握点的最小距离，否则顶点处
 //    两圆无交点、sqrt 负数被截断后肘部会飞出画面。
-// 3. 肘部法向的符号。见 armPose 里的说明——乘side 会让肘部穿过身体中线。
+// 3. 肘部法向的符号。见 armPose 里的说明——乘 side 会让肘部穿过身体中线。
 
 const bodyMidX = 160;     // 身体中线
 const barY = 65;          // 握点（单杠）高度
@@ -28,10 +28,16 @@ const gripX = 52;         // 握点相对中线的水平偏移
 const upperArm = 53;      // 上臂长：肩 → 肘
 const foreArm = 52;       // 前臂长：肘 → 握点（与 SVG 静态路径 M136 155L99 117L108 65 一致）
 
-// 顶点行程：肩部升到接近单杠高度即锁定。上限不只是「不超过单杠」——
-// 行程再大，两圆夹角变小、法向分量趋零，肘部会在顶点翻到外侧（张开成翅膀）。
-// 76px 是全程肘部保持外展的最大值，由数值扫描确定。
-const maxLift = 76;
+// 顶点行程：肩部升到下巴明显高过单杠为止。
+//
+// 上限由两个相互竞争的约束夹住，扫描确定：
+//   · 下限（美学）：下巴在 SVG 里约y=138，单杠 y=63。lift=76 时下巴只超杠
+//     1px，肉眼看不出「举上去」，长按和空闲摆动几乎分不出来。
+//   · 上限（几何）：lift 继续增大，肩—握点距离 reach 趋近 forearm 侧，肘部
+//     外展量从 36.7px 单调降到-0.9px（lift=100）乃至-10.8px（lift=108），
+//     肘部越过身体中线、手臂在胸前交叉，重现早期「翅膀」bug。
+// 92px 时下巴超杠 17px（清晰可见），肘部仍外展 15.7px，两端都留有余量。
+export const maxLift = 92;
 
 // 肩部水平内收（px）：拉起时肩胛后缩，肩关节略向中线靠拢。
 const shoulderTighten = 6;
@@ -129,15 +135,17 @@ export function torsoLean(lift) {
 export const muscleUpDuration = 4.2;
 
 export function muscleUpPose(time, startLift, returnLift = 0) {
-  // 行程全部落在 [0, maxLift] 内：肩部升到单杠高度即顶点，不越过单杠，
-  // 避免手臂进入「肩在杠上方」的折叠姿态。
+  // 关键帧的峰值直接引用 maxLift，避免两处数值不同步（曾因硬编码 76 导致
+  // 顶点与几何上限不一致）。中间帧按比例铺开，保证上行比下行快——真实引体
+  // 向上是爆发拉起、缓慢控制下放。
+  const top = maxLift;
   const poses = [
     [0, startLift, 'pull'],
-    [.65, 42, 'transition'],
-    [1.15, 60, 'press'],
-    [1.8, maxLift, 'support'],
-    [2.45, maxLift, 'lower'],
-    [3.2, 48, 'lower'],
+    [.6, top * .38, 'transition'],
+    [1.1, top * .66, 'press'],
+    [1.75, top, 'support'],
+    [2.5, top, 'lower'],
+    [3.3, top * .52, 'lower'],
     [muscleUpDuration, returnLift, 'complete'],
   ];
   for (let i = 1; i < poses.length; i++) {

@@ -31,8 +31,10 @@ if (studies) {
   function draw(time) {
     // armPose 里肩关节带躯干后仰，body 必须同步旋转，否则肩部圆点会与躯干脱节。
     const pose = muscleUp ? muscleUpPose(muscleUp.time, muscleUp.startLift, muscleUp.returnLift) : null;
-    // 空闲摆动保持在 [0, 44]：不触发锁定姿态，且不越过 maxLift=76 的可达边界。
-    const lift = pose ? pose.lift : 22 * (1 - Math.cos(pullTime * Math.PI * 2 / 5.6));
+    // 空闲摆动幅度必须远小于 maxLift(92)，否则长按拉起到顶看起来和平时没区别。
+    // 原来用 22，峰值 44 几乎追平长按的 76/92——这是「长按没效果」的真正原因。
+    // 现在取 6（0~6px），只作为呼吸般的微动，长按的位移才足够醒目。
+    const lift = pose ? pose.lift : 3 * (1 - Math.cos(pullTime * Math.PI * 2 / 5.6));
     currentLift = lift;
     if (pose) robot.dataset.phase = pose.phase;
     const lean = torsoLean(lift);
