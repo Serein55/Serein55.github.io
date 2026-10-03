@@ -8,8 +8,8 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const shell = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
 const escape = text => String(text).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
 
-// 站内品牌名：Learning 各页面统一用完整姓名，不跟随首页的简写。
-const BRAND = 'Darren Gan';
+// 站内品牌名：全站统一为英文简称，与 index.html 保持一致。
+const BRAND = 'Darren';
 
 // 每个分类一个目录：notes.json 存 Markdown 笔记，readings.json 存 PDF 讲义。
 const collections = [
@@ -25,13 +25,18 @@ const collections = [
 function page(title, description, content, depth = 0, head = '') {
   const prefix = '../'.repeat(depth);
   return shell
-    .replace(/<title>.*?<\/title>/, `<title>Darren Gan · ${escape(title)}</title>\n<meta name="description" content="${escape(description)}">`)
+    .replace(/<title>.*?<\/title>/, `<title>${BRAND} · ${escape(title)}</title>`)
+    // 外壳自带首页的 description，必须整条替换而不是追加，否则页面会有两个。
+    .replace(/\n*<meta name="description"[^>]*>/, '')
     .replace(/(<a class="brand"[^>]*>)[^<]*(<\/a>)/, `$1${BRAND}$2`)
+    // 首页专属的动画资源不能带到子页面，否则在子目录下会 404。
+    .replace(/\s*<link rel="stylesheet" href="intro\.css">/, '')
+    .replace(/\s*<script type="module" src="intro\.mjs"><\/script>/, '')
     .replace('href="index.html" class="active"', 'href="index.html"')
     .replace('href="learning.html"', 'href="learning.html" class="active" aria-current="page"')
-    .replace(/href="((?:index|research|learning|life)\.html|style\.css)"/g, `href="${prefix}$1"`)
-    .replace('</head>', `<link rel="stylesheet" href="${prefix}learning.css">\n${head}</head>`)
-    .replace(/<main class="wrap">[\s\S]*?<\/main>/, () => content);
+    .replace(/href="((?:index|research|learning)\.html|style\.css)"/g, `href="${prefix}$1"`)
+    .replace('</head>', `<meta name="description" content="${escape(description)}">\n<link rel="stylesheet" href="${prefix}learning.css">\n${head}</head>`)
+    .replace(/<main\b[^>]*>[\s\S]*?<\/main>/, () => content);
 }
 
 // Protect code before extracting TeX, including fenced code inside blockquotes.
@@ -208,7 +213,7 @@ for (const collection of collections) {
       totalFormulas += rendered.formulas;
       const html = page(note.title, note.description, notePage(collection, note, rendered, manifest[index - 1], manifest[index + 1]), 2, `<link rel="stylesheet" href="../../assets/katex/katex.min.css">\n`);
       fs.writeFileSync(path.join(dir, `${note.slug}.html`), html);
-      items.push(entry(index, `learning/${collection.id}/${note.slug}.html`, note.title, note.description, note.badge));
+      items.push(entry(index, `learning/${collection.id}/${note.slug}.html`, note.title, note.description, note.badge || note.category));
       console.log(`${note.slug}: ${rendered.headings.length} headings, ${rendered.formulas} formulas, ${rendered.codeBlocks} code blocks, ${rendered.images} images`);
     }
     summary.push(section(collection, manifest.length, items));
@@ -242,7 +247,16 @@ function vendor(from, to) {
   fs.copyFileSync(path.join(root, from), path.join(root, to));
 }
 vendor('node_modules/katex/dist/katex.min.css', 'assets/katex/katex.min.css');
-fs.cpSync(path.join(root, 'node_modules/katex/dist/fonts'), path.join(root, 'assets/katex/fonts'), { recursive: true });
+// 只保留 woff2：站点面向现代浏览器，ttf/woff 备用源合计约 900KB 且从不被请求。
+const katexFonts = path.join(root, 'assets/katex/fonts');
+fs.rmSync(katexFonts, { recursive: true, force: true });
+fs.mkdirSync(katexFonts, { recursive: true });
+for (const name of fs.readdirSync(path.join(root, 'node_modules/katex/dist/fonts'))) {
+  if (name.endsWith('.woff2')) fs.copyFileSync(path.join(root, 'node_modules/katex/dist/fonts', name), path.join(katexFonts, name));
+}
+// 同步删掉 CSS 里的 woff / truetype 备用源，避免留下指向不存在文件的引用。
+const katexCss = path.join(root, 'assets/katex/katex.min.css');
+fs.writeFileSync(katexCss, fs.readFileSync(katexCss, 'utf8').replace(/,url\(fonts\/[^)]+\.(?:woff|ttf)\) format\("(?:woff|truetype)"\)/g, ''));
 vendor('node_modules/katex/LICENSE', 'assets/katex/LICENSE');
 vendor('node_modules/pdfjs-dist/build/pdf.min.mjs', 'assets/pdfjs/pdf.min.mjs');
 vendor('node_modules/pdfjs-dist/build/pdf.worker.min.mjs', 'assets/pdfjs/pdf.worker.min.mjs');
