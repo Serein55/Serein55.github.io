@@ -1,5 +1,5 @@
 import { setupGuitarAudio } from './guitar-audio.mjs';
-import { muscleUpDuration, muscleUpPose, armPose, bindMuscleUpGesture } from './robot-motion.mjs';
+import { muscleUpDuration, muscleUpPose, armPose, torsoLean, bindMuscleUpGesture } from './robot-motion.mjs';
 
 const studies = document.querySelector('.motion-studies');
 
@@ -29,18 +29,21 @@ if (studies) {
   let muscleUp = null;
 
   function draw(time) {
-    // Equal-length arm segments solve the elbow position while both hands stay on the bar.
+    // armPose 里肩关节带躯干后仰，body 必须同步旋转，否则肩部圆点会与躯干脱节。
     const pose = muscleUp ? muscleUpPose(muscleUp.time, muscleUp.startLift, muscleUp.returnLift) : null;
-    const lift = pose ? pose.lift : 80 * (1 - Math.cos(pullTime * Math.PI * 2 / 5.6)) / 2;
+    // 空闲摆动保持在 [0, 44]：不触发锁定姿态，且不越过 maxLift=76 的可达边界。
+    const lift = pose ? pose.lift : 22 * (1 - Math.cos(pullTime * Math.PI * 2 / 5.6));
     currentLift = lift;
     if (pose) robot.dataset.phase = pose.phase;
-    body.setAttribute('transform', `translate(0 ${-lift})`);
+    const lean = torsoLean(lift);
+    body.setAttribute('transform', `translate(0 ${-lift}) rotate(${lean} 160 210)`);
     shadow.setAttribute('rx', 58 - lift * .12);
     arms.forEach((arm, index) => {
       const { sx, sy, hx, hy, ex, ey } = armPose(index, lift);
       arm.paths.forEach(path => path.setAttribute('d', `M${sx} ${sy}L${ex} ${ey}L${hx} ${hy}`));
       arm.elbow.setAttribute('cx', ex);
       arm.elbow.setAttribute('cy', ey);
+      arm.shoulder.setAttribute('cx', sx);
       arm.shoulder.setAttribute('cy', sy);
     });
 
