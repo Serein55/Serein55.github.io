@@ -1,18 +1,11 @@
 import { setupGuitarAudio } from './guitar-audio.mjs';
-import { muscleUpDuration, muscleUpPose, armPose, torsoLean, bindMuscleUpGesture } from './robot-motion.mjs';
 
+// 首页现在只剩吉他一个动画，引体向上（robot-motion.mjs）已整段移除。
+// 这里只驱动吉他：右手拨弦、左手按弦、音波扩散，以及全局播放/暂停。
 const studies = document.querySelector('.motion-studies');
 
 if (studies) {
   const find = selector => studies.querySelector(selector);
-  const body = find('#robot-body');
-  const robot = find('.robot-play');
-  const shadow = find('#robot-shadow');
-  const arms = ['left', 'right'].map(side => ({
-    paths: studies.querySelectorAll(`[data-arm="${side}"]`),
-    elbow: find(`#${side}-elbow`),
-    shoulder: find(`#${side}-shoulder`),
-  }));
   const hand = find('#picking-hand');
   const fingers = [...studies.querySelectorAll('[data-finger]')];
   const frets = [...studies.querySelectorAll('[data-fret]')];
@@ -24,31 +17,8 @@ if (studies) {
   let frame = null;
   let previous = null;
   let elapsed = 0;
-  let pullTime = 0;
-  let currentLift = 0;
-  let muscleUp = null;
 
   function draw(time) {
-    // armPose 里肩关节带躯干后仰，body 必须同步旋转，否则肩部圆点会与躯干脱节。
-    const pose = muscleUp ? muscleUpPose(muscleUp.time, muscleUp.startLift, muscleUp.returnLift) : null;
-    // 空闲摆动幅度必须远小于 maxLift(92)，否则长按拉起到顶看起来和平时没区别。
-    // 原来用 22，峰值 44 几乎追平长按的 76/92——这是「长按没效果」的真正原因。
-    // 现在取 6（0~6px），只作为呼吸般的微动，长按的位移才足够醒目。
-    const lift = pose ? pose.lift : 3 * (1 - Math.cos(pullTime * Math.PI * 2 / 5.6));
-    currentLift = lift;
-    if (pose) robot.dataset.phase = pose.phase;
-    const lean = torsoLean(lift);
-    body.setAttribute('transform', `translate(0 ${-lift}) rotate(${lean} 160 210)`);
-    shadow.setAttribute('rx', 58 - lift * .12);
-    arms.forEach((arm, index) => {
-      const { sx, sy, hx, hy, ex, ey } = armPose(index, lift);
-      arm.paths.forEach(path => path.setAttribute('d', `M${sx} ${sy}L${ex} ${ey}L${hx} ${hy}`));
-      arm.elbow.setAttribute('cx', ex);
-      arm.elbow.setAttribute('cy', ey);
-      arm.shoulder.setAttribute('cx', sx);
-      arm.shoulder.setAttribute('cy', sy);
-    });
-
     const beat = time * Math.PI * 2 / 1.8;
     hand.setAttribute('transform', `rotate(${Math.sin(beat) * 5} 130 191)`);
     fingers.forEach((finger, index) => {
@@ -64,19 +34,8 @@ if (studies) {
   function tick(now) {
     const delta = previous === null ? 0 : Math.min((now - previous) / 1000, .05);
     elapsed += delta;
-    if (muscleUp) muscleUp.time += delta;
-    else pullTime += delta;
     previous = now;
     draw(elapsed);
-    if (muscleUp && muscleUp.time >= muscleUpDuration) {
-      paused = muscleUp.restorePaused;
-      if (!paused) pullTime = 0;
-      muscleUp = null;
-      delete robot.dataset.action;
-      delete robot.dataset.phase;
-      syncPlayback();
-      return;
-    }
     frame = requestAnimationFrame(tick);
   }
 
@@ -92,24 +51,12 @@ if (studies) {
   toggle.hidden = false;
   toggle.addEventListener('click', () => {
     paused = !paused;
-    if (muscleUp) {
-      muscleUp.restorePaused = false;
-      muscleUp.returnLift = 0;
-    }
     syncPlayback();
   });
   reducedMotion.addEventListener('change', () => { paused = reducedMotion.matches; syncPlayback(); });
   document.addEventListener('visibilitychange', syncPlayback);
-  const cancelHold = bindMuscleUpGesture(robot, () => {
-    if (muscleUp || document.hidden || !visible) return;
-    muscleUp = { time: 0, startLift: currentLift, returnLift: paused ? currentLift : 0, restorePaused: paused };
-    robot.dataset.action = 'muscle-up';
-    paused = false;
-    syncPlayback();
-  });
   const observer = new IntersectionObserver(([entry]) => {
     visible = entry.isIntersecting;
-    if (!visible) cancelHold();
     syncPlayback();
   });
   observer.observe(studies);

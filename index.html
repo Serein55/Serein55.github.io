@@ -31,71 +31,18 @@
   <p>Undergraduate student in Mathematics and Applied Mathematics at Shanghai Jiao Tong University, enrolled in 2024.</p>
   </div>
 
-  <section class="motion-studies" aria-label="机器人运动小动画">
+  <section class="motion-studies" aria-label="吉他弹拨动画">
     <div class="motion-scenes">
       <figure class="motion-study">
-        <button class="robot-play" type="button" aria-label="长按机器人完成一次双力臂，也可按回车或空格触发" disabled>
-        <svg class="motion-art" viewBox="0 0 320 330" aria-hidden="true">
-          <g transform="translate(32 76) scale(.8)">
-          <ellipse cx="160" cy="302" rx="58" ry="5" class="scene-shadow" id="robot-shadow"/>
-          <path d="M34 308H286" class="ground-line"/>
-          <g class="bar-frame">
-            <path d="M53 303V62Q53 55 60 55H260Q267 55 267 62V303"/>
-            <path d="M39 304H68M252 304H282M54 69H266"/>
-          </g>
-          <path d="M71 63H249" class="bar-grip"/>
-          <g id="robot-body">
-            <path d="M143 210L137 245L140 280M177 210L183 245L180 280" class="robot-limb"/>
-            <path d="M143 217L139 238M177 217L181 238M140 254V275M180 254V275" class="limb-panel"/>
-            <circle cx="138" cy="246" r="8" class="joint"/>
-            <circle cx="182" cy="246" r="8" class="joint"/>
-            <circle cx="138" cy="246" r="3" class="joint-center"/>
-            <circle cx="182" cy="246" r="3" class="joint-center"/>
-            <path d="M132 278H147L149 291H126Q123 284 132 278ZM173 278H188Q197 284 194 291H171Z" class="shell"/>
-            <path d="M128 288H147M173 288H192" class="detail-line"/>
-            <path d="M140 198H180L183 217L165 222H155L137 217Z" class="dark-shell"/>
-            <path d="M153 205H167V216H153Z" class="joint-center"/>
-            <rect x="151" y="134" width="18" height="17" rx="5" class="joint"/>
-            <path d="M137 144Q160 138 183 144L190 160L181 195Q160 207 139 195L130 160Z" class="shell"/>
-            <path d="M140 147Q160 143 180 147L176 168H144Z" class="dark-shell"/>
-            <path d="M145 175H175L172 191H148Z" class="chest-panel"/>
-            <path d="M152 182H168M154 186H166" class="detail-line"/>
-            <circle cx="160" cy="156" r="3" class="status-light"/>
-            <rect x="135" y="109" width="7" height="19" rx="3" class="joint"/>
-            <rect x="178" y="109" width="7" height="19" rx="3" class="joint"/>
-            <rect x="140" y="100" width="40" height="38" rx="13" class="shell"/>
-            <path d="M144 108Q160 103 176 108V122Q160 127 144 122Z" class="visor"/>
-            <path d="M150 114H170" class="visor-light"/>
-            <path d="M154 132H166" class="detail-line"/>
-          </g>
-          <g id="robot-arms">
-            <path data-arm="left" d="M136 155L99 117L108 65" class="robot-limb"/>
-            <path data-arm="right" d="M184 155L221 117L212 65" class="robot-limb"/>
-            <path data-arm="left" d="M136 155L99 117L108 65" class="arm-panel"/>
-            <path data-arm="right" d="M184 155L221 117L212 65" class="arm-panel"/>
-            <circle id="left-elbow" cx="99" cy="117" r="7" class="joint"/>
-            <circle id="right-elbow" cx="221" cy="117" r="7" class="joint"/>
-            <circle id="left-shoulder" cx="136" cy="155" r="8" class="joint"/>
-            <circle id="right-shoulder" cx="184" cy="155" r="8" class="joint"/>
-          </g>
-          <g class="robot-hands">
-            <rect x="100" y="58" width="16" height="14" rx="5" class="shell"/>
-            <rect x="204" y="58" width="16" height="14" rx="5" class="shell"/>
-            <path d="M105 59V65M110 59V65M209 59V65M214 59V65" class="detail-line"/>
-          </g>
-          </g>
-        </svg>
-        </button>
-      </figure>
-
-      <figure class="motion-study">
         <button class="guitar-play" type="button" aria-label="弹奏吉他" disabled>
-        <svg class="motion-art" viewBox="0 0 320 330" aria-hidden="true">
+        <svg class="motion-art" viewBox="40 42 240 288" aria-hidden="true">
           <defs>
-            <linearGradient id="guitar-arm-edge" x1="0" x2="320" gradientUnits="userSpaceOnUse">
+            <!-- 手臂在画面左右边缘淡出。渐变范围与 viewBox(34 30 252 300) 对齐：
+                 淡出必须发生在 viewBox 之外，否则手臂会被生硬切断而不是消失。 -->
+            <linearGradient id="guitar-arm-edge" x1="40" x2="280" gradientUnits="userSpaceOnUse">
               <stop offset="0" stop-color="black"/>
-              <stop offset=".15" stop-color="white"/>
-              <stop offset=".85" stop-color="white"/>
+              <stop offset=".2" stop-color="white"/>
+              <stop offset=".8" stop-color="white"/>
               <stop offset="1" stop-color="black"/>
             </linearGradient>
             <mask id="guitar-arm-fade" maskUnits="userSpaceOnUse" x="0" y="0" width="320" height="330">
