@@ -1,0 +1,51 @@
+/* research 页：标题在左、机械手弹吉他视频在右的双栏布局。
+   视频 = guitar-loop.mp4（16:9 / 1280x720 / 10.3s / 正放倒放回文循环 / 无音轨）。
+   默认暂停，鼠标移入才播放（由 guitar-audio.mjs 驱动 play()/pause()）；
+   声音由同一个模块用 Web Audio 合成（Karplus-Strong 拨弦采样），跟随视频
+   进度按节拍弹和弦，移开画面后播完当前一轮循环再停。
+   画面上没有任何状态指示图标（中央播放三角 / 左上角标 / 右上声音点，
+   2026-10-12 用户要求去掉），只有悬停时的轻微投影提示可交互。 */
+.research-layout {
+  display: grid;
+/* 左栏收窄到能放下标题即可，右栏（视频）因此拿到更多空间、整体左移。
+   之前 .9fr/1.1fr 让左栏占掉近半宽，标题右侧留下一大片空白，
+   视觉上视频被推得很远。 */
+  grid-template-columns: minmax(0, .72fr) minmax(0, 1fr);
+  align-content: center;
+  align-items: center;
+  gap: clamp(32px, 3vw, 56px);
+  padding-block: clamp(64px, 7vw, 120px) 72px;
+}
+.research-copy { max-width: 520px; }
+.research-copy p { text-wrap: pretty; }
+.motion-studies { width: 100%; max-width: 700px; justify-self: start; }
+/* 单列容器。画面紧贴标题一侧——之前 justify-self:end 把整块推到最右，
+   左中之间空出一大片。现在靠左栏起点排布，标题与视频靠得更近。 */
+.motion-scenes { width: 100%; max-width: 700px; }
+.motion-study { min-width: 0; width: 100%; }
+/* 视频 = guitar-loop.mp4：原始素材 2560x1440 (16:9) 裁剪成 1280x720，
+   正放 + 倒放拼成 10.3s 回文循环（正放段与倒放段衔接处速度为 0，无跳变）。
+   **必须保持 16:9**：原始素材的构图是拨弦手在左、按弦手在右下，
+   任何朝方形的裁切都会把按弦手切掉。圆角 + 占位底色与页面纸感对齐。
+   悬停才播放，所以给 pointer 光标和悬停时的轻微投影作为唯一的交互暗示 ——
+   用户要求画面上不放任何状态指示图标（中央播放三角/ 左上角标 / 右上声音点，
+   2026-10-12），那些图标视觉干扰反而更大。 */
+.motion-art {
+  display: block; width: 100%; height: auto;
+  border-radius: 10px; background: #e9ebe5;
+  cursor: pointer; transition: box-shadow .18s ease;
+}
+.motion-study:hover .motion-art { box-shadow: 0 6px 24px rgb(0 0 0 / .1); }
+.motion-art:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+
+@media (min-width: 1700px) {
+  .research-layout { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+}
+@media (max-width: 1000px) {
+  .research-layout { grid-template-columns: minmax(0, 1fr); gap: 64px; padding-block: 88px 80px; }
+  .research-copy { max-width: 620px; }
+  .motion-studies { max-width: 600px; }
+}
+@media (max-width: 480px) {
+  .research-layout { padding-block: 64px; gap: 40px; }
+}

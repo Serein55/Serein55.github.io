@@ -6,6 +6,7 @@
 <title>Darren · Research</title>
 <meta name="description" content="甘仁达的研究方向与项目记录。">
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="research.css">
 </head>
 <body>
 
@@ -21,9 +22,27 @@
   </div>
 </nav>
 
-<main class="wrap">
-  <h1>Research</h1>
+<main class="wrap research-layout">
+  <div class="research-copy">
+    <h1>Research</h1>
+  </div>
+
+  <section class="motion-studies" aria-label="机械手弹吉他视频">
+    <div class="motion-scenes">
+      <figure class="motion-study">
+        <!-- 默认暂停，所以给一张首帧海报：暂停时画面有明确的「未在动」质感，
+             不然首帧和播放第一帧几乎一样，肉眼看不出差别。
+             poster 还会顺手解决「视频未加载时的空白」。 -->
+        <video class="motion-art" src="guitar-loop.mp4" poster="guitar-poster.jpg"
+               muted loop playsinline preload="metadata" tabindex="0"
+               aria-label="机械手弹奏民谣吉他的循环动画，鼠标移入时播放"></video>
+        <span class="visually-hidden" id="guitar-status" role="status"></span>
+      </figure>
+    </div>
+  </section>
 </main>
+
+<script type="module" src="guitar-audio.mjs"></script>
 
 </body>
 </html>

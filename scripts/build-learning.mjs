@@ -29,14 +29,18 @@ function page(title, description, content, depth = 0, head = '') {
     // 外壳自带首页的 description，必须整条替换而不是追加，否则页面会有两个。
     .replace(/\n*<meta name="description"[^>]*>/, '')
     .replace(/(<a class="brand"[^>]*>)[^<]*(<\/a>)/, `$1${BRAND}$2`)
-    // 首页专属的动画资源不能带到子页面，否则在子目录下会 404。
-    .replace(/\s*<link rel="stylesheet" href="intro\.css">/, '')
-    .replace(/\s*<script type="module" src="intro\.mjs"><\/script>/, '')
+    // index 目前是纯文字页，不引任何专属资源，所以这里无需剥离。
+    // **若以后 index 又引入首页专属的 CSS/JS，必须在这里加正则剥掉**，
+    // 否则子页面在子目录下引用这些文件会 404（这个坑踩过一次）。
+    // 剥的时候注意别用 <g id="x">.*?</g> 这类贪婪匹配嵌套结构。
     .replace('href="index.html" class="active"', 'href="index.html"')
     .replace('href="learning.html"', 'href="learning.html" class="active" aria-current="page"')
     .replace(/href="((?:index|research|learning)\.html|style\.css)"/g, `href="${prefix}$1"`)
     .replace('</head>', `<meta name="description" content="${escape(description)}">\n<link rel="stylesheet" href="${prefix}learning.css">\n${head}</head>`)
-    .replace(/<main\b[^>]*>[\s\S]*?<\/main>/, () => content);
+    .replace(/<main\b[^>]*>[\s\S]*?<\/main>/, () => content)
+    // 补尾部换行。index.html 若缺尾部换行，正文替换后产物会跟着缺，
+    // git 就会显示「\ No newline at end of file」。防御性处理，保证输出稳定。
+    .replace(/\s*$/, '\n');
 }
 
 // Protect code before extracting TeX, including fenced code inside blockquotes.

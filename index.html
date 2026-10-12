@@ -6,8 +6,6 @@
 <title>Darren</title>
 <meta name="description" content="甘仁达的个人主页：数学与应用数学，上海交通大学 2024 级，以及近期在学习与动手做的事。">
 <link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="intro.css">
-<script type="module" src="intro.mjs"></script>
 </head>
 <body>
 
@@ -23,89 +21,11 @@
   </div>
 </nav>
 
-<main class="wrap intro-layout">
-  <div class="intro-copy">
+<main class="wrap">
   <h1>Gan Renda</h1>
 
   <h2>About Me</h2>
   <p>Undergraduate student in Mathematics and Applied Mathematics at Shanghai Jiao Tong University, enrolled in 2024.</p>
-  </div>
-
-  <section class="motion-studies" aria-label="吉他弹拨动画">
-    <div class="motion-scenes">
-      <figure class="motion-study">
-        <button class="guitar-play" type="button" aria-label="弹奏吉他" disabled>
-        <svg class="motion-art" viewBox="40 42 240 288" aria-hidden="true">
-          <defs>
-            <!-- 手臂在画面左右边缘淡出。渐变范围与 viewBox(34 30 252 300) 对齐：
-                 淡出必须发生在 viewBox 之外，否则手臂会被生硬切断而不是消失。 -->
-            <linearGradient id="guitar-arm-edge" x1="40" x2="280" gradientUnits="userSpaceOnUse">
-              <stop offset="0" stop-color="black"/>
-              <stop offset=".2" stop-color="white"/>
-              <stop offset=".8" stop-color="white"/>
-              <stop offset="1" stop-color="black"/>
-            </linearGradient>
-            <mask id="guitar-arm-fade" maskUnits="userSpaceOnUse" x="0" y="0" width="320" height="330">
-              <rect width="320" height="330" fill="url(#guitar-arm-edge)"/>
-            </mask>
-          </defs>
-          <g class="fret-arm" mask="url(#guitar-arm-fade)">
-            <path d="M332 126L279 194L228 165" class="robot-limb"/>
-            <path d="M326 134L285 186M269 189L235 169" class="limb-panel"/>
-            <circle cx="279" cy="194" r="11" class="joint"/>
-            <circle cx="279" cy="194" r="4" class="joint-center"/>
-            <circle cx="228" cy="165" r="7" class="joint"/>
-          </g>
-          <g transform="rotate(35 165 208)">
-            <path d="M153 161C132 149 116 164 123 185C129 201 106 208 110 235C115 269 151 277 177 271C208 265 224 237 213 216C204 198 191 198 195 181C201 158 181 150 176 161Z" class="guitar-body"/>
-            <path d="M150 166C133 157 122 170 130 186C137 204 113 213 117 235C122 263 151 270 176 265C201 259 216 238 206 219" class="guitar-binding"/>
-            <circle cx="165" cy="209" r="20" class="guitar-rosette"/>
-            <circle cx="165" cy="209" r="15" class="sound-hole"/>
-            <path d="M157 89H173L176 193H154Z" class="fretboard"/>
-            <path d="M156 109H174M156 124H174M155 138H175M155 151H175M155 163H175M154 175H176M154 186H176" class="frets"/>
-            <circle cx="165" cy="130" r="1.6" class="fret-dot"/>
-            <circle cx="165" cy="157" r="1.6" class="fret-dot"/>
-            <rect x="152" y="57" width="26" height="39" rx="6" class="guitar-head"/>
-            <path d="M149 65H145M149 77H145M149 89H145M181 65H185M181 77H185M181 89H185" class="tuning-pegs"/>
-            <rect x="147" y="242" width="36" height="9" rx="2" class="fretboard"/>
-            <g class="guitar-strings">
-              <path d="M159 64V247"/><path d="M161.5 64V247"/><path d="M164 64V247"/>
-              <path d="M166.5 64V247"/><path d="M169 64V247"/><path d="M171 64V247"/>
-            </g>
-            <g id="fretting-hand">
-              <path d="M184 128L190 143L183 156L177 150L177 131Z" class="shell"/>
-              <g class="fret-finger" data-fret="0"><path d="M181 133H160L156 137" class="finger"/><circle cx="171" cy="133" r="2.4" class="joint"/></g>
-              <g class="fret-finger" data-fret="1"><path d="M183 140H157L155 144" class="finger"/><circle cx="170" cy="140" r="2.4" class="joint"/></g>
-              <g class="fret-finger" data-fret="2"><path d="M183 147H163L160 151" class="finger"/><circle cx="172" cy="147" r="2.4" class="joint"/></g>
-            </g>
-          </g>
-          <g class="picking-arm" mask="url(#guitar-arm-fade)">
-            <path d="M-12 132L65 178L130 191" class="robot-limb"/>
-            <path d="M-6 136L55 172M77 181L121 189" class="limb-panel"/>
-            <circle cx="65" cy="178" r="11" class="joint"/>
-            <circle cx="65" cy="178" r="4" class="joint-center"/>
-            <circle cx="130" cy="191" r="9" class="joint"/>
-          </g>
-          <g id="picking-hand">
-            <path d="M133 181L151 182L161 199L150 212L132 200Z" class="shell"/>
-            <path d="M138 185L148 187L154 198L148 204L138 198Z" class="chest-panel"/>
-            <g class="pluck-finger" data-finger="0"><path d="M149 183L164 185L171 195" class="finger"/><circle cx="164" cy="185" r="2.5" class="joint"/></g>
-            <g class="pluck-finger" data-finger="1"><path d="M159 197L174 203L172 215" class="finger"/><circle cx="174" cy="203" r="2.5" class="joint"/></g>
-            <g class="pluck-finger" data-finger="2"><path d="M156 203L169 213L165 223" class="finger"/><circle cx="169" cy="213" r="2.5" class="joint"/></g>
-            <g class="pluck-finger" data-finger="3"><path d="M151 208L161 220L156 227" class="finger"/><circle cx="161" cy="220" r="2.5" class="joint"/></g>
-            <g class="pluck-finger" data-finger="4"><path d="M145 208L151 221L148 227" class="finger"/><circle cx="151" cy="221" r="2" class="joint"/></g>
-          </g>
-          <g class="sound-marks" fill="none">
-            <path id="sound-wave-1" d="M205 183Q215 193 210 205"/>
-            <path id="sound-wave-2" d="M214 176Q229 192 220 211"/>
-          </g>
-        </svg>
-        </button>
-        <span class="visually-hidden" id="guitar-status" role="status"></span>
-      </figure>
-    </div>
-    <button class="motion-toggle" type="button" aria-label="暂停动画" hidden><svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14"><path class="motion-toggle-icon" d="M5 3V13M11 3V13"/></svg></button>
-  </section>
 </main>
 
 </body>
