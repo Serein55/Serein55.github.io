@@ -1,0 +1,43 @@
+/* A4 export of the Markdown notes; screen reader styles stay unchanged. */
+@page { size: A4; margin: 18mm 18mm 20mm; }
+*, *::before, *::after { animation: none !important; transition: none !important; }
+main { opacity: 1 !important; transform: none !important; }
+html, body { display: block; min-height: 0; background: white; }
+body { color: #26363d; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body > nav, .breadcrumb, .note-footer { display: none; }
+.note-page { width: 174mm; padding: 0; margin: 0; }
+.note-header .eyebrow { font-size: 9pt; margin: 0 0 8pt; }
+.note-header h1 { font-size: 25pt; margin: 0 0 14pt; }
+.note-header h1::after { margin-top: 12pt; }
+.note-description { font-size: 10pt; line-height: 1.7; margin-bottom: 16pt; }
+.note-toc { padding: 12pt; margin: 16pt 0 24pt; }
+.note-toc summary { font-size: 10pt; list-style: none; }
+.note-toc ol { margin-top: 10pt; gap: 6pt 16pt; }
+.note-toc a { font-size: 9pt; }
+.note-content { font-size: 10.5pt; line-height: 1.7; color: #26363d; }
+.note-content p { margin-bottom: 10pt; orphans: 3; widows: 3; }
+.note-content :is(h2, h3, h4, h5, h6) { break-after: avoid; }
+.note-content h2 { font-size: 17pt; margin: 24pt 0 12pt; padding-top: 14pt; }
+.note-content h3 { font-size: 13pt; margin: 18pt 0 9pt; }
+.note-content :is(h4, h5, h6) { font-size: 11pt; margin: 14pt 0 8pt; }
+.note-content ul, .note-content ol { margin: 8pt 0 12pt; }
+.note-content li { margin: 4pt 0; }
+.note-content li > p { margin-bottom: 6pt; }
+.note-content blockquote { padding: 8pt 12pt; margin: 12pt 0; }
+.note-content hr { margin: 16pt 0; }
+.note-content hr + h2 { margin-top: 18pt; }
+.code-block, .code-fold { margin: 12pt 0; overflow: visible; }
+.code-label, .code-fold summary { padding: 5pt 9pt; font-size: 8pt; break-after: avoid; }
+.note-content pre { padding: 9pt; font-size: 8pt; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; overflow: visible; }
+.table-scroll { margin: 12pt 0; overflow: visible; }
+.note-content table { font-size: 8.5pt; line-height: 1.55; }
+.note-content th, .note-content td { padding: 6pt; min-width: 0; overflow-wrap: anywhere; }
+.note-content tr { break-inside: avoid; }
+.note-content thead { display: table-header-group; }
+.note-content figure { margin: 14pt 0; break-inside: avoid; }
+.note-content figure > a { padding: 6pt; }
+.note-content figure img { width: auto; max-width: 100%; max-height: 195mm; object-fit: contain; margin: auto; }
+.note-content figcaption { font-size: 8pt; margin-top: 6pt; }
+.note-content figcaption a { display: none; }
+.math-block { overflow: visible; padding: 6pt 0; margin: 10pt 0; break-inside: avoid; }
+a { color: #385a4c; }

@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { Marked, Renderer } from 'marked';
 import katex from 'katex';
 
@@ -183,7 +183,7 @@ function readingPage(collection, reading) {
     <noscript><p class="reader-hint">当前浏览器未启用 JavaScript，可<a href="${file}">直接打开 PDF</a>阅读。</p></noscript>
   </div>
   <footer class="note-footer">
-    <div class="note-tools"><a href="../../learning.html#${collection.id}">← 全部讲义</a><a href="${file}" download>下载 PDF</a><a href="#top">回到顶部 ↑</a></div>
+    <div class="note-tools"><a href="../../learning.html#${collection.id}">← 全部${collection.type === 'notes' ? '笔记' : '讲义'}</a><a href="${file}" download>下载 PDF</a><a href="#top">回到顶部 ↑</a></div>
   </footer>
 </main>`;
 }
@@ -201,6 +201,25 @@ ${items.join('\n')}
   </details>`;
 }
 
+// Print sources are temporary: public note URLs always remain PDF readers.
+if (process.argv.includes('--pdf-sources')) {
+  const output = path.join(root, 'tmp', 'pdfs');
+  fs.mkdirSync(output, { recursive: true });
+  for (const collection of collections.filter(item => item.type === 'notes')) {
+    collection.dir = path.join('learning', collection.id);
+    const notes = JSON.parse(fs.readFileSync(path.join(root, collection.dir, 'notes.json'), 'utf8'));
+    for (const note of notes) {
+      const rendered = renderNote(collection, note);
+      const base = pathToFileURL(path.join(root, collection.dir) + path.sep).href;
+      const html = page(note.title, note.description, notePage(collection, note, rendered), 2,
+        '<link rel="stylesheet" href="../../assets/katex/katex.min.css">\n')
+        .replace('<head>', `<head>\n<base href="${base}">`);
+      fs.writeFileSync(path.join(output, `${note.slug}.html`), html);
+    }
+  }
+  process.exit(0);
+}
+
 const summary = [];
 
 for (const collection of collections) {
@@ -209,19 +228,18 @@ for (const collection of collections) {
   const manifest = JSON.parse(fs.readFileSync(path.join(dir, `${collection.type}.json`), 'utf8'));
 
   if (collection.type === 'notes') {
-    let totalFormulas = 0;
     const items = [];
     for (let index = 0; index < manifest.length; index++) {
       const note = manifest[index];
-      const rendered = renderNote(collection, note);
-      totalFormulas += rendered.formulas;
-      const html = page(note.title, note.description, notePage(collection, note, rendered, manifest[index - 1], manifest[index + 1]), 2, `<link rel="stylesheet" href="../../assets/katex/katex.min.css">\n`);
+      if (!note.file || !note.pages || !fs.existsSync(path.join(dir, note.file))) {
+        throw new Error(`Missing PDF for ${note.slug}: run npm run build:pdf first.`);
+      }
+      const html = page(note.title, note.description, readingPage(collection, note), 2, `<link rel="stylesheet" href="../../reader.css">\n<script type="module" src="../../reader.mjs"></script>\n`);
       fs.writeFileSync(path.join(dir, `${note.slug}.html`), html);
-      items.push(entry(index, `learning/${collection.id}/${note.slug}.html`, note.title, note.description, note.badge || note.category));
-      console.log(`${note.slug}: ${rendered.headings.length} headings, ${rendered.formulas} formulas, ${rendered.codeBlocks} code blocks, ${rendered.images} images`);
+      items.push(entry(index, `learning/${collection.id}/${note.slug}.html`, note.title, note.description, `PDF · ${note.pages} 页`));
+      console.log(`${note.slug}: ${note.pages} pages`);
     }
     summary.push(section(collection, manifest.length, items));
-    console.log(`Built ${manifest.length} notes; ${totalFormulas} formulas rendered locally.`);
     continue;
   }
 

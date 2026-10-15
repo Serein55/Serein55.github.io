@@ -2,3 +2,4 @@ node_modules/
 .npm-cache/
 .workbuddy/
 _shots/
+tmp/pdfs/

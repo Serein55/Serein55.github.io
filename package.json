@@ -4,11 +4,14 @@
   "type": "module",
   "scripts": {
     "build": "node scripts/build-learning.mjs",
+    "build:pdf": "node scripts/build-note-pdfs.mjs",
     "preview": "node scripts/preview.mjs"
   },
   "devDependencies": {
     "katex": "0.18.7",
     "marked": "17.0.5",
-    "pdfjs-dist": "4.10.38"
+    "pdf-lib": "1.17.1",
+    "pdfjs-dist": "4.10.38",
+    "playwright": "1.62.1"
   }
 }
