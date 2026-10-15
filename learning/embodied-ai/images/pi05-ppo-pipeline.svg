@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="1160" viewBox="0 0 960 1160" role="img" aria-labelledby="title desc">
+  <title id="title">π₀.₅ + PPO：采样与更新闭环</title>
+  <desc id="desc">冻结的视觉语言编码器向动作专家与价值头提供特征。动作采样后进入环境，轨迹与奖励形成 buffer，经 GAE 和 PPO 更新动作专家、价值头及可选噪声头，再同步给下一轮采样。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9Z" fill="#53796a"/></marker>
+  </defs>
+  <style>
+    text { font-family: 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif; fill: #26363d; }
+    .title { font-size: 30px; font-weight: 600; }
+    .head { font-size: 25px; font-weight: 600; }
+    .body { font-size: 22px; }
+    .small { font-size: 19px; fill: #536961; }
+    .box { stroke: #b8cfc3; stroke-width: 1.5; rx: 12; }
+    .line { fill: none; stroke: #53796a; stroke-width: 2.5; marker-end: url(#arrow); }
+  </style>
+  <rect width="960" height="1160" fill="white"/>
+  <text class="title" x="480" y="43" text-anchor="middle">π₀.₅ + PPO：采样与更新闭环</text>
+  <rect class="box" x="70" y="70" width="820" height="92" fill="#f4f7f5"/>
+  <text class="head" x="95" y="106">① 观测与预处理</text>
+  <text class="body" x="95" y="140">外部 / 腕部图像 + 指令；token、mask、匹配的归一化统计</text>
+  <path class="line" d="M480 162 V195"/>
+  <rect class="box" x="70" y="198" width="820" height="102" fill="#eaf1f6"/>
+  <text class="head" x="95" y="235">② SigLIP + PaliGemma VLM（主实验冻结）</text>
+  <text class="body" x="95" y="272">prefix hidden states + KV cache：每个动作块编码一次</text>
+  <path class="line" d="M340 300 V340"/>
+  <path class="line" d="M760 300 V340"/>
+  <rect class="box" x="70" y="345" width="530" height="118" fill="#eef6f1"/>
+  <text class="head" x="95" y="383">③ π₀.₅ Action Expert</text>
+  <text class="body" x="95" y="419">noisy action + 时间 adaRMS + KV</text>
+  <text class="small" x="95" y="449">输出 velocity；Flow-Noise 另接 noise head</text>
+  <rect class="box" x="635" y="345" width="255" height="118" fill="#fbf3e8"/>
+  <text class="head" x="660" y="383">Value Head</text>
+  <text class="body" x="660" y="419">有效 token 池化</text>
+  <text class="body" x="660" y="449">预测 V(o)</text>
+  <path class="line" d="M340 463 V500"/>
+  <rect class="box" x="70" y="505" width="530" height="120" fill="#eef6f1"/>
+  <text class="head" x="95" y="543">④ K 步去噪，保存 chain 和旧概率</text>
+  <text class="body" x="95" y="579">Flow-Noise：每步随机</text>
+  <text class="body" x="95" y="610">Flow-SDE：一个随机步，其余 ODE</text>
+  <path class="line" d="M340 625 V660"/>
+  <rect class="box" x="70" y="665" width="530" height="100" fill="#f4f7f5"/>
+  <text class="head" x="95" y="703">⑤ 反归一化 → 环境执行动作块</text>
+  <text class="body" x="95" y="741">前 H_exec 步 → reward、done、新观测</text>
+  <path class="line" d="M340 765 V800"/>
+  <path class="line" d="M760 463 V800"/>
+  <text class="small" x="675" y="628">rollout 不保留梯度</text>
+  <text class="small" x="675" y="660">保存 old value</text>
+  <rect class="box" x="70" y="805" width="820" height="112" fill="#fbf3e8"/>
+  <text class="head" x="95" y="843">⑥ Rollout Buffer → chunk reward → GAE</text>
+  <text class="body" x="95" y="879">obs、chain、旧 log-prob / value 固定；生成 advantage 与 return</text>
+  <text class="small" x="95" y="905">正确处理终止、截断、bootstrap 与有效样本 mask</text>
+  <path class="line" d="M480 917 V951"/>
+  <rect class="box" x="70" y="956" width="820" height="125" fill="#eef6f1"/>
+  <text class="head" x="95" y="995">⑦ PPO：重算同一转移，不重新采样</text>
+  <text class="body" x="95" y="1031">clipped policy loss + value loss − entropy bonus</text>
+  <text class="small" x="95" y="1061">更新 expert、value head、可选 noise head；同步到下一轮 rollout</text>
+  <path class="line" d="M70 1018 H28 V245 H65"/>
+  <text class="small" x="480" y="1120" text-anchor="middle">评估：保留学习后的策略，移除逐步探索噪声，使用 ODE 生成动作</text>
+  <text class="small" x="480" y="1148" text-anchor="middle">示意图为教学整理；本体状态与各项 shape 以所选实验配置为准</text>
+</svg>

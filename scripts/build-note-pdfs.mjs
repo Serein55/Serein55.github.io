@@ -10,11 +10,16 @@ const sourceDir = path.join(root, 'tmp', 'pdfs');
 const noteDir = path.join(root, 'learning', 'embodied-ai');
 const manifestPath = path.join(noteDir, 'notes.json');
 const notes = JSON.parse(await fs.readFile(manifestPath, 'utf8'));
+const requested = process.argv.slice(2);
+const selected = requested.length ? notes.filter(note => requested.includes(note.slug)) : notes;
+if (requested.some(slug => !notes.some(note => note.slug === slug))) {
+  throw new Error(`Unknown note slug: ${requested.join(', ')}`);
+}
 
 execFileSync(process.execPath, ['scripts/build-learning.mjs', '--pdf-sources'], { cwd: root, stdio: 'inherit' });
 const browser = await chromium.launch({ headless: true });
 try {
-  for (const note of notes) {
+  for (const note of selected) {
     const page = await browser.newPage({ viewport: { width: 794, height: 1123 } });
     await page.goto(pathToFileURL(path.join(sourceDir, `${note.slug}.html`)).href);
     await page.addStyleTag({ path: path.join(root, 'scripts', 'note-print.css') });
@@ -61,7 +66,7 @@ try {
     await page.close();
   }
   // Publish only after every note has exported successfully.
-  for (const note of notes) await fs.copyFile(path.join(sourceDir, note.file), path.join(noteDir, note.file));
+  for (const note of selected) await fs.copyFile(path.join(sourceDir, note.file), path.join(noteDir, note.file));
   await fs.writeFile(manifestPath, JSON.stringify(notes, null, 2) + '\n');
 } finally {
   await browser.close();

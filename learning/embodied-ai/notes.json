@@ -27,8 +27,8 @@
     "slug": "pi-rl",
     "title": "π-RL：Flow Matching 与强化学习",
     "category": "论文阅读",
-    "description": "从动作概率的计算难点出发，记录 Flow-Noise、Flow-SDE 与 PPO 的衔接和推导。",
+    "description": "从 Flow-Noise、Flow-SDE 到 π₀.₅ 的完整 PPO pipeline：模型输入、轨迹采样、GAE、参数更新与官方代码对应。",
     "file": "pi-rl.pdf",
-    "pages": 5
+    "pages": 17
   }
 ]
